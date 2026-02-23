@@ -1,21 +1,668 @@
 <!DOCTYPE html>
-<html>
-    
-    <head>
-             <meta charset="utf-8">
-        <title>Family Project</title>
-        <meta name="description" content="Family Project">
-        <script src="https://aframe.io/releases/0.3.2/aframe.min.js"></script>
-    </head>
-    <body>
-        <a-scene>
-            <a-assets>
-                <img id="bubblesky" src="bubblesky.png">
-        
-            </a-assets>
-            
-            <a-sky src="#bubblesky"></a-sky>
-        
-        </a-scene>
-    </body>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Studio Intelligence: Art Commerce + Thematic Signal Engine</title>
+    <meta
+      name="description"
+      content="Interactive single-scroll specification for an Etsy-adjacent art commerce and sales intelligence platform."
+    />
+    <style>
+      :root {
+        --bg: #0f1115;
+        --panel: #171a21;
+        --panel-2: #1f2430;
+        --text: #ecf0f6;
+        --muted: #aab3c7;
+        --accent: #7bdcff;
+        --accent-2: #91ffac;
+        --warn: #ffd580;
+        --border: #2f3645;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+        background: linear-gradient(120deg, #0a0d14 0%, #121724 100%);
+        color: var(--text);
+      }
+
+      header {
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        background: rgba(15, 17, 21, 0.86);
+        backdrop-filter: blur(8px);
+        border-bottom: 1px solid var(--border);
+        padding: 14px 20px;
+      }
+
+      header h1 {
+        margin: 0 0 4px;
+        font-size: 1.2rem;
+      }
+
+      header p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 0.92rem;
+      }
+
+      main {
+        max-width: 1180px;
+        margin: 20px auto 64px;
+        padding: 0 14px;
+      }
+
+      details {
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        margin-bottom: 14px;
+        overflow: hidden;
+      }
+
+      summary {
+        list-style: none;
+        cursor: pointer;
+        padding: 14px 16px;
+        background: #131722;
+        border-bottom: 1px solid var(--border);
+        font-weight: 700;
+      }
+
+      summary::-webkit-details-marker {
+        display: none;
+      }
+
+      .section-body {
+        padding: 16px;
+      }
+
+      .grid {
+        display: grid;
+        gap: 12px;
+      }
+
+      .grid-3 {
+        grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      }
+
+      .card {
+        background: var(--panel-2);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 12px;
+      }
+
+      h2,
+      h3,
+      h4 {
+        margin: 0 0 10px;
+      }
+
+      h3 {
+        font-size: 1rem;
+      }
+
+      .pill-wrap {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+
+      .pill {
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        padding: 5px 10px;
+        color: var(--muted);
+        font-size: 0.85rem;
+      }
+
+      .layout-two {
+        display: grid;
+        grid-template-columns: 1.3fr 1fr;
+        gap: 14px;
+      }
+
+      .gallery-controls {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-bottom: 12px;
+      }
+
+      select,
+      input,
+      textarea,
+      button {
+        width: 100%;
+        padding: 8px 10px;
+        border-radius: 8px;
+        border: 1px solid var(--border);
+        background: #0d111a;
+        color: var(--text);
+      }
+
+      button {
+        cursor: pointer;
+        background: #1e2d3d;
+      }
+
+      .gallery-item img {
+        width: 100%;
+        height: 150px;
+        object-fit: cover;
+        border-radius: 8px;
+        border: 1px solid var(--border);
+      }
+
+      .meta-row {
+        display: flex;
+        justify-content: space-between;
+        gap: 8px;
+        font-size: 0.88rem;
+        color: var(--muted);
+      }
+
+      .trend {
+        margin-top: 8px;
+        font-size: 0.86rem;
+        color: var(--accent-2);
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.92rem;
+      }
+
+      th,
+      td {
+        border: 1px solid var(--border);
+        padding: 8px;
+        text-align: left;
+      }
+
+      th {
+        background: #111826;
+      }
+
+      .kpi {
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: var(--accent);
+      }
+
+      .tiny {
+        color: var(--muted);
+        font-size: 0.82rem;
+      }
+
+      .range-row {
+        display: grid;
+        grid-template-columns: 1fr 100px;
+        gap: 10px;
+        align-items: center;
+        margin-bottom: 10px;
+      }
+
+      .status {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+        gap: 8px;
+      }
+
+      .status div {
+        text-align: center;
+        border: 1px solid var(--border);
+        background: #111724;
+        border-radius: 8px;
+        padding: 8px;
+      }
+
+      .dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 999px;
+        display: inline-block;
+        margin-right: 6px;
+      }
+
+      .active {
+        background: #8effa8;
+      }
+
+      .inactive {
+        background: #3a4255;
+      }
+
+      canvas {
+        width: 100%;
+        max-width: 460px;
+        background: #0d131d;
+        border-radius: 8px;
+        border: 1px solid var(--border);
+      }
+
+      @media (max-width: 920px) {
+        .layout-two {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Studio Intelligence: Art Commerce + Thematic Signal Engine</h1>
+      <p>Single-scroll, interactive specification for storefront, pricing logic, production ops, and demand analytics.</p>
+    </header>
+
+    <main>
+      <details open>
+        <summary>I. Platform Blueprint + 12-Theme Taxonomy</summary>
+        <div class="section-body grid grid-3">
+          <article class="card">
+            <h3>Five Scroll Modules</h3>
+            <ol>
+              <li>Public Gallery View</li>
+              <li>Pricing + Edition Engine</li>
+              <li>Production & Framing Matrix</li>
+              <li>Sales & Theme Intelligence</li>
+              <li>Curatorial Writing Studio</li>
+            </ol>
+          </article>
+
+          <article class="card">
+            <h3>Theme Taxonomy (12)</h3>
+            <div class="pill-wrap" id="themePills"></div>
+          </article>
+
+          <article class="card">
+            <h3>Artwork Tag Model</h3>
+            <ul>
+              <li>Primary Theme + Secondary Theme</li>
+              <li>Process Tag (AI / Analog / Hybrid)</li>
+              <li>Material Tag (Archival Pigment, Silver Gelatin, etc.)</li>
+              <li>Edition Class (Limited / Open / Chemical-only)</li>
+            </ul>
+          </article>
+        </div>
+      </details>
+
+      <details open>
+        <summary>II. Forward-Facing Gallery Commerce (Collector View)</summary>
+        <div class="section-body">
+          <div class="gallery-controls">
+            <label>
+              Filter by Theme
+              <select id="themeFilter"></select>
+            </label>
+            <label>
+              Sort by
+              <select id="sortFilter">
+                <option value="popular">Popularity</option>
+                <option value="priceAsc">Price: Low → High</option>
+                <option value="priceDesc">Price: High → Low</option>
+              </select>
+            </label>
+          </div>
+          <div class="grid grid-3" id="gallery"></div>
+        </div>
+      </details>
+
+      <details open>
+        <summary>III. Mid-Layer Pricing + Edition Control Engine</summary>
+        <div class="section-body layout-two">
+          <article class="card">
+            <h3>Price Scaling Formula</h3>
+            <p class="tiny">Final Price = (Base Size Price × Edition Scarcity × Frame Cost Factor) + Chemical Add-On + Popularity Surge</p>
+            <div class="grid grid-3">
+              <label>Size
+                <select id="size"></select>
+              </label>
+              <label>Edition Type
+                <select id="editionType">
+                  <option value="1.15">Limited Edition</option>
+                  <option value="1">Open Edition</option>
+                  <option value="1.35">Chemical-only Edition</option>
+                </select>
+              </label>
+              <label>Frame
+                <select id="frameFactor">
+                  <option value="1">Unframed</option>
+                  <option value="1.18">Ready-made Frame</option>
+                  <option value="1.33">Custom Frame</option>
+                </select>
+              </label>
+              <label>Signed Premium
+                <select id="signedPremium">
+                  <option value="0">No</option>
+                  <option value="40">Yes (+$40)</option>
+                </select>
+              </label>
+              <label>Chemical Photography
+                <select id="chemicalAddOn">
+                  <option value="0">Not selected</option>
+                  <option value="120">Silver Gelatin (+$120)</option>
+                  <option value="180">Darkroom Fiber (+$180)</option>
+                </select>
+              </label>
+              <label>Popularity Surge
+                <select id="surge">
+                  <option value="0">None</option>
+                  <option value="0.05">+5%</option>
+                  <option value="0.08">+8%</option>
+                  <option value="0.12">+12%</option>
+                </select>
+              </label>
+            </div>
+            <button id="recalc" style="margin-top: 10px">Recalculate Price</button>
+          </article>
+
+          <article class="card">
+            <h3>Edition & Signature Management</h3>
+            <div class="meta-row"><span>Edition Track</span><strong id="editionTrack">3 / 25 sold</strong></div>
+            <div class="meta-row"><span>Certificate ID</span><strong>CERT-2026-0019</strong></div>
+            <div class="meta-row"><span>Print Batch ID</span><strong>BATCH-GEL-011</strong></div>
+            <hr style="border-color: var(--border); opacity: 0.5" />
+            <div class="kpi" id="priceOutput">$200</div>
+            <p class="tiny">Includes size scaling, scarcity multiplier, framing factor, signature premium, and demand surge.</p>
+          </article>
+        </div>
+      </details>
+
+      <details open>
+        <summary>IV. Production + Framing Matrix + Sales Logistics</summary>
+        <div class="section-body grid" style="gap: 14px">
+          <article class="card">
+            <h3>Frame Source Intelligence</h3>
+            <table>
+              <thead>
+                <tr>
+                  <th>Supplier</th>
+                  <th>Best For</th>
+                  <th>Example Cost</th>
+                  <th>Margin Impact</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td>IKEA</td><td>Ready-made small/medium sizes</td><td>$24–$55</td><td>High margin on entry prints</td></tr>
+                <tr><td>Framebridge</td><td>Premium custom framing</td><td>$95–$220</td><td>Best for collectors / large formats</td></tr>
+                <tr><td>American Frame</td><td>Professional archival options</td><td>$60–$180</td><td>Balanced margin + quality</td></tr>
+                <tr><td>Blick Art Materials</td><td>Artist studio bulk procurement</td><td>$35–$140</td><td>Good for edition batches</td></tr>
+              </tbody>
+            </table>
+          </article>
+
+          <article class="card">
+            <h3>Sales + Shipment State Tracking</h3>
+            <div class="status">
+              <div><span class="dot active"></span>Printed</div>
+              <div><span class="dot active"></span>Signed</div>
+              <div><span class="dot inactive"></span>Framed</div>
+              <div><span class="dot inactive"></span>Packed</div>
+              <div><span class="dot inactive"></span>Shipped</div>
+              <div><span class="dot inactive"></span>Delivered</div>
+            </div>
+          </article>
+        </div>
+      </details>
+
+      <details open>
+        <summary>V. Theme Radar + 6 Strategic Management Controls</summary>
+        <div class="section-body layout-two">
+          <article class="card">
+            <h3>Demand Radar (12 Theme Axes)</h3>
+            <canvas id="radar" width="460" height="460"></canvas>
+            <p class="tiny">Displays relative demand signal across the 12 thematic categories.</p>
+          </article>
+          <article class="card">
+            <h3>Six Controls</h3>
+            <div id="levers"></div>
+          </article>
+        </div>
+      </details>
+
+      <details open>
+        <summary>VI. Curatorial Paragraph Builder</summary>
+        <div class="section-body layout-two">
+          <article class="card">
+            <h3>Compose Curatorial Copy</h3>
+            <label>75-word Marketplace Summary
+              <textarea id="shortDesc" rows="4">A monochrome terrain dissolves into rhythm and atmosphere, balancing stillness with movement. This signed edition print explores memory through tonal contrasts and repeated gestures.</textarea>
+            </label>
+            <label style="margin-top: 8px; display: block">250-word Curatorial Essay
+              <textarea id="longDesc" rows="8">This work originates in the artist's field studies and darkroom-inspired tonal mapping. The image negotiates between documentary surface and symbolic abstraction. Repetition and interval produce rapport, while the horizon remains an unstable threshold between place and projection. Available in archival pigment and optional silver gelatin process, the edition foregrounds process as meaning. The result invites slow looking: texture, grain, and edge become conceptual actors rather than background details.</textarea>
+            </label>
+            <button id="refreshPreview" style="margin-top: 10px">Update Preview</button>
+          </article>
+
+          <article class="card">
+            <h3>Live Output</h3>
+            <div class="meta-row"><span>Marketplace word count</span><strong id="wcShort"></strong></div>
+            <div class="meta-row"><span>Curatorial word count</span><strong id="wcLong"></strong></div>
+            <hr style="border-color: var(--border); opacity: 0.5" />
+            <h4>Marketplace Version</h4>
+            <p id="previewShort" class="tiny"></p>
+            <h4>Curatorial Version</h4>
+            <p id="previewLong" class="tiny"></p>
+          </article>
+        </div>
+      </details>
+    </main>
+
+    <script>
+      const themes = [
+        'Black & White Landscapes',
+        'Color Landscapes',
+        'The Figure (Monochrome)',
+        'The Figure (Color)',
+        'Surrealism (Monochrome)',
+        'Surrealism (Color)',
+        'AI-Generated Art',
+        'Collage / Mixed Media',
+        'Rapport & Repetition Studies',
+        'Architectural / Urban Space',
+        'Mythic / Classical Referencing',
+        'Chemical Photography'
+      ];
+
+      const sizePricing = {
+        '8.5 x 11': 200,
+        '11 x 18': 350,
+        '18 x 24': 550,
+        '24 x 36 (2\' x 3\')': 950
+      };
+
+      const artworks = [
+        { title: 'Nocturne Drift', theme: 'Surrealism (Monochrome)', popularity: 92, saves: 183, image: 'woods.jpeg', edition: '12 / 30', chemical: true, baseSize: '11 x 18' },
+        { title: 'Figure in Rust Light', theme: 'The Figure (Color)', popularity: 81, saves: 129, image: 'office.jpeg', edition: '3 / 20', chemical: false, baseSize: '18 x 24' },
+        { title: 'Threshold Geometry', theme: 'Architectural / Urban Space', popularity: 76, saves: 102, image: 'Attachment-1-4.jpeg', edition: '7 / 40', chemical: true, baseSize: '8.5 x 11' },
+        { title: 'Sky Rapport Study', theme: 'Rapport & Repetition Studies', popularity: 88, saves: 154, image: 'bubblesky.png', edition: '15 / 50', chemical: false, baseSize: '11 x 18' }
+      ];
+
+      const demandScores = [70, 59, 64, 61, 82, 88, 91, 72, 77, 56, 49, 84];
+
+      const levers = [
+        'Edition Scarcity Control',
+        'Price Elasticity Tuning',
+        'Theme Amplification',
+        'Format Shift (Small ↔ Large)',
+        'Framed vs Unframed Ratio',
+        'Analog vs AI Production Balance'
+      ];
+
+      function initThemeUI() {
+        const pills = document.getElementById('themePills');
+        const filter = document.getElementById('themeFilter');
+
+        pills.innerHTML = themes.map((t) => `<span class="pill">${t}</span>`).join('');
+        filter.innerHTML = `<option value="all">All Themes</option>${themes.map((t) => `<option>${t}</option>`).join('')}`;
+      }
+
+      function renderGallery() {
+        const theme = document.getElementById('themeFilter').value;
+        const sort = document.getElementById('sortFilter').value;
+        let items = [...artworks];
+
+        if (theme !== 'all') {
+          items = items.filter((item) => item.theme === theme);
+        }
+
+        if (sort === 'popular') {
+          items.sort((a, b) => b.popularity - a.popularity);
+        } else if (sort === 'priceAsc') {
+          items.sort((a, b) => sizePricing[a.baseSize] - sizePricing[b.baseSize]);
+        } else {
+          items.sort((a, b) => sizePricing[b.baseSize] - sizePricing[a.baseSize]);
+        }
+
+        const container = document.getElementById('gallery');
+        container.innerHTML = items
+          .map(
+            (item) => `
+          <article class="card gallery-item">
+            <img src="${item.image}" alt="${item.title}" />
+            <h3>${item.title}</h3>
+            <div class="meta-row"><span>${item.theme}</span><span>Edition ${item.edition}</span></div>
+            <div class="meta-row"><span>Size: ${item.baseSize}</span><span>Base $${sizePricing[item.baseSize]}</span></div>
+            <div class="meta-row"><span>Saved ${item.saves} times</span><span>${item.chemical ? 'Chemical Print Available' : 'Pigment Print'}</span></div>
+            <div class="trend">⭐ Popularity score: ${item.popularity} | Trending in ${item.theme}</div>
+          </article>
+        `
+          )
+          .join('');
+      }
+
+      function initPricing() {
+        const sizeInput = document.getElementById('size');
+        sizeInput.innerHTML = Object.keys(sizePricing)
+          .map((size) => `<option value="${size}">${size} ($${sizePricing[size]})</option>`)
+          .join('');
+      }
+
+      function recalcPrice() {
+        const base = sizePricing[document.getElementById('size').value];
+        const edition = Number(document.getElementById('editionType').value);
+        const frame = Number(document.getElementById('frameFactor').value);
+        const signed = Number(document.getElementById('signedPremium').value);
+        const chemical = Number(document.getElementById('chemicalAddOn').value);
+        const surge = Number(document.getElementById('surge').value);
+
+        const scaled = base * edition * frame;
+        const surgeValue = scaled * surge;
+        const total = scaled + signed + chemical + surgeValue;
+
+        document.getElementById('priceOutput').textContent = `$${Math.round(total).toLocaleString()}`;
+      }
+
+      function drawRadar() {
+        const canvas = document.getElementById('radar');
+        const ctx = canvas.getContext('2d');
+        const cx = canvas.width / 2;
+        const cy = canvas.height / 2;
+        const radius = 170;
+        const levels = 5;
+
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        for (let l = 1; l <= levels; l++) {
+          const r = (radius / levels) * l;
+          ctx.beginPath();
+          for (let i = 0; i < themes.length; i++) {
+            const a = (Math.PI * 2 * i) / themes.length - Math.PI / 2;
+            const x = cx + r * Math.cos(a);
+            const y = cy + r * Math.sin(a);
+            i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+          }
+          ctx.closePath();
+          ctx.strokeStyle = '#2b3344';
+          ctx.stroke();
+        }
+
+        themes.forEach((theme, i) => {
+          const a = (Math.PI * 2 * i) / themes.length - Math.PI / 2;
+          const x = cx + radius * Math.cos(a);
+          const y = cy + radius * Math.sin(a);
+          ctx.beginPath();
+          ctx.moveTo(cx, cy);
+          ctx.lineTo(x, y);
+          ctx.strokeStyle = '#2b3344';
+          ctx.stroke();
+
+          ctx.fillStyle = '#9fb0c8';
+          ctx.font = '11px sans-serif';
+          ctx.fillText(theme.replace(' (Monochrome)', '').replace(' (Color)', ''), x * 0.93 - 36, y * 0.93);
+        });
+
+        ctx.beginPath();
+        demandScores.forEach((score, i) => {
+          const a = (Math.PI * 2 * i) / themes.length - Math.PI / 2;
+          const r = (score / 100) * radius;
+          const x = cx + r * Math.cos(a);
+          const y = cy + r * Math.sin(a);
+          i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+        });
+        ctx.closePath();
+        ctx.strokeStyle = '#7bdcff';
+        ctx.lineWidth = 2;
+        ctx.fillStyle = 'rgba(123, 220, 255, 0.22)';
+        ctx.fill();
+        ctx.stroke();
+      }
+
+      function initLevers() {
+        const container = document.getElementById('levers');
+        container.innerHTML = levers
+          .map(
+            (lever, index) => `
+            <div class="range-row">
+              <label for="lever-${index}">${lever}</label>
+              <output id="lever-out-${index}">50</output>
+              <input id="lever-${index}" type="range" min="0" max="100" value="50" />
+            </div>
+          `
+          )
+          .join('');
+
+        levers.forEach((_, index) => {
+          const slider = document.getElementById(`lever-${index}`);
+          const out = document.getElementById(`lever-out-${index}`);
+          slider.addEventListener('input', () => {
+            out.textContent = slider.value;
+          });
+        });
+      }
+
+      function updateCuratorialPreview() {
+        const short = document.getElementById('shortDesc').value.trim();
+        const long = document.getElementById('longDesc').value.trim();
+        const wc = (text) => (text ? text.split(/\s+/).length : 0);
+
+        document.getElementById('wcShort').textContent = wc(short);
+        document.getElementById('wcLong').textContent = wc(long);
+        document.getElementById('previewShort').textContent = short;
+        document.getElementById('previewLong').textContent = long;
+      }
+
+      initThemeUI();
+      initPricing();
+      initLevers();
+      renderGallery();
+      recalcPrice();
+      drawRadar();
+      updateCuratorialPreview();
+
+      document.getElementById('themeFilter').addEventListener('change', renderGallery);
+      document.getElementById('sortFilter').addEventListener('change', renderGallery);
+      document.getElementById('recalc').addEventListener('click', recalcPrice);
+      document.getElementById('refreshPreview').addEventListener('click', updateCuratorialPreview);
+    </script>
+  </body>
 </html>
