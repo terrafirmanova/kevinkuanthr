@@ -1,0 +1,25 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .panel {
+    @apply bg-slate-900/70 border border-slate-800 rounded-lg p-4 backdrop-blur;
+  }
+
+  .panel-title {
+    @apply text-sm uppercase tracking-wide text-cyan-300 mb-3;
+  }
+
+  .btn-primary {
+    @apply px-3 py-2 rounded bg-cyan-600 hover:bg-cyan-500 text-white text-sm;
+  }
+
+  .btn-secondary {
+    @apply px-3 py-2 rounded bg-slate-800 hover:bg-slate-700 text-sm;
+  }
+
+  .field {
+    @apply w-full bg-slate-950 border border-slate-800 rounded px-2 py-2 text-sm;
+  }
+}
