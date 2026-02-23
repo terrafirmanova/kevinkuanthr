@@ -1,0 +1,87 @@
+{
+  "nodes": [
+    { "id": "sym_burnout", "type": "symptom", "label": "Burnout" },
+    { "id": "sym_compulsive_scrolling", "type": "symptom", "label": "Compulsive Scrolling" },
+    { "id": "sym_identity_fragmentation", "type": "symptom", "label": "Identity Fragmentation" },
+    { "id": "sym_validation_dependence", "type": "symptom", "label": "Validation Dependence" },
+    { "id": "sym_alienation", "type": "symptom", "label": "Alienation" },
+
+    { "id": "if_infinite_scroll", "type": "interface_feature", "label": "Infinite Scroll" },
+    { "id": "if_notification_system", "type": "interface_feature", "label": "Notification System" },
+    { "id": "if_social_metrics_display", "type": "interface_feature", "label": "Social Metrics Display" },
+
+    { "id": "alg_engagement_optimization", "type": "algorithm", "label": "Engagement Optimization Algorithm" },
+    { "id": "alg_recommendation_ranking", "type": "algorithm", "label": "Recommendation Ranking" },
+
+    { "id": "bp_variable_reward", "type": "behavioral_principle", "label": "Variable Reward Reinforcement" },
+    { "id": "bp_intermittent_reinforcement", "type": "behavioral_principle", "label": "Intermittent Reinforcement" },
+    { "id": "bp_social_validation", "type": "behavioral_principle", "label": "Social Validation Feedback" },
+
+    { "id": "eco_attention_economy", "type": "economic_model", "label": "Attention Economy" },
+    { "id": "eco_behavioral_data_extraction", "type": "economic_model", "label": "Behavioral Data Extraction" },
+    { "id": "eco_rentier_platform", "type": "economic_model", "label": "Rentier Platform Model" },
+
+    { "id": "inst_adtech", "type": "institutional_origin", "label": "Ad-Tech Platform Governance" },
+    { "id": "inst_growth_equity", "type": "institutional_origin", "label": "Growth Equity Incentive Regime" },
+
+    { "id": "theory_behaviorism", "type": "theoretical_origin", "label": "Behavioral Psychology Origin" },
+    { "id": "theory_cybernetics", "type": "theoretical_origin", "label": "Cybernetic Optimization Origin" },
+
+    { "id": "ns_dysregulation", "type": "nervous_system_state", "label": "Nervous System Dysregulation" },
+    { "id": "ns_hypervigilance", "type": "nervous_system_state", "label": "Hypervigilant Arousal" },
+    { "id": "ps_fragmented_attention", "type": "perceptual_state", "label": "Attention Fragmentation" },
+    { "id": "ps_identity_diffusion", "type": "perceptual_state", "label": "Identity Diffusion" },
+
+    { "id": "ri_sensory_grounding", "type": "reintegration_intervention", "label": "Sensory Grounding" },
+    { "id": "ri_uninterrupted_attention", "type": "reintegration_intervention", "label": "Uninterrupted Attention Practice" },
+    { "id": "ri_social_interaction", "type": "reintegration_intervention", "label": "Physical Social Interaction" },
+    { "id": "ri_autonomous_creation", "type": "reintegration_intervention", "label": "Autonomous Creation" },
+
+    { "id": "sr_social_embodiment", "type": "social_reintegration", "label": "Social Embodiment" },
+    { "id": "sr_symbolic_reintegration", "type": "symbolic_reintegration", "label": "Symbolic Reintegration" },
+    { "id": "ar_restored_agency", "type": "agency_restoration", "label": "Agency Restoration" }
+  ],
+  "edges": [
+    { "source": "sym_compulsive_scrolling", "target": "if_infinite_scroll", "type": "emerges_from" },
+    { "source": "if_infinite_scroll", "target": "alg_engagement_optimization", "type": "modulates" },
+    { "source": "alg_engagement_optimization", "target": "bp_variable_reward", "type": "reinforces" },
+    { "source": "bp_variable_reward", "target": "eco_attention_economy", "type": "causes" },
+    { "source": "eco_attention_economy", "target": "inst_adtech", "type": "emerges_from" },
+    { "source": "inst_adtech", "target": "theory_behaviorism", "type": "emerges_from" },
+
+    { "source": "sym_burnout", "target": "if_notification_system", "type": "emerges_from" },
+    { "source": "if_notification_system", "target": "alg_recommendation_ranking", "type": "modulates" },
+    { "source": "alg_recommendation_ranking", "target": "bp_intermittent_reinforcement", "type": "reinforces" },
+    { "source": "bp_intermittent_reinforcement", "target": "eco_behavioral_data_extraction", "type": "causes" },
+    { "source": "eco_behavioral_data_extraction", "target": "inst_growth_equity", "type": "emerges_from" },
+    { "source": "inst_growth_equity", "target": "theory_cybernetics", "type": "emerges_from" },
+
+    { "source": "sym_validation_dependence", "target": "if_social_metrics_display", "type": "emerges_from" },
+    { "source": "if_social_metrics_display", "target": "alg_recommendation_ranking", "type": "modulates" },
+    { "source": "alg_recommendation_ranking", "target": "bp_social_validation", "type": "reinforces" },
+    { "source": "bp_social_validation", "target": "eco_rentier_platform", "type": "causes" },
+    { "source": "eco_rentier_platform", "target": "inst_adtech", "type": "emerges_from" },
+
+    { "source": "sym_identity_fragmentation", "target": "if_social_metrics_display", "type": "emerges_from" },
+    { "source": "sym_alienation", "target": "if_notification_system", "type": "emerges_from" },
+
+    { "source": "sym_compulsive_scrolling", "target": "ns_dysregulation", "type": "causes" },
+    { "source": "ns_dysregulation", "target": "ps_fragmented_attention", "type": "causes" },
+    { "source": "ps_fragmented_attention", "target": "ri_sensory_grounding", "type": "restores" },
+    { "source": "ri_sensory_grounding", "target": "ri_uninterrupted_attention", "type": "restores" },
+    { "source": "ri_uninterrupted_attention", "target": "ri_social_interaction", "type": "restores" },
+    { "source": "ri_social_interaction", "target": "ri_autonomous_creation", "type": "restores" },
+    { "source": "ri_autonomous_creation", "target": "ar_restored_agency", "type": "restores" },
+
+    { "source": "sym_burnout", "target": "ns_hypervigilance", "type": "causes" },
+    { "source": "ns_hypervigilance", "target": "ps_fragmented_attention", "type": "causes" },
+    { "source": "sym_identity_fragmentation", "target": "ps_identity_diffusion", "type": "causes" },
+    { "source": "ps_identity_diffusion", "target": "sr_symbolic_reintegration", "type": "restores" },
+    { "source": "sr_symbolic_reintegration", "target": "sr_social_embodiment", "type": "restores" },
+    { "source": "sr_social_embodiment", "target": "ar_restored_agency", "type": "restores" },
+
+    { "source": "ri_social_interaction", "target": "sr_social_embodiment", "type": "reverses" },
+    { "source": "sr_social_embodiment", "target": "sr_symbolic_reintegration", "type": "reverses" },
+    { "source": "sr_symbolic_reintegration", "target": "ar_restored_agency", "type": "reverses" }
+  ]
+}
