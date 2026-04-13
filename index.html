@@ -1,21 +1,556 @@
-<!DOCTYPE html>
-<html>
-    
-    <head>
-             <meta charset="utf-8">
-        <title>Family Project</title>
-        <meta name="description" content="Family Project">
-        <script src="https://aframe.io/releases/0.3.2/aframe.min.js"></script>
-    </head>
-    <body>
-        <a-scene>
-            <a-assets>
-                <img id="bubblesky" src="bubblesky.png">
-        
-            </a-assets>
-            
-            <a-sky src="#bubblesky"></a-sky>
-        
-        </a-scene>
-    </body>
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ritual Wheel — Dual Interface Mock</title>
+    <style>
+      :root {
+        --bg: #07090f;
+        --panel: #101421;
+        --panel-alt: #0d111b;
+        --text: #e8ebff;
+        --muted: #94a0c4;
+        --accent: #72e5ff;
+        --gold: #f7d37a;
+        --red: #ff5e72;
+        --green: #8affaf;
+        --white: #f7f9ff;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        font-family: Inter, Segoe UI, Roboto, system-ui, sans-serif;
+        color: var(--text);
+        background: radial-gradient(circle at 20% 0%, #1c2645, transparent 35%),
+          radial-gradient(circle at 90% 0%, #331f4d, transparent 30%),
+          var(--bg);
+        min-height: 100vh;
+      }
+
+      .top-bar {
+        position: sticky;
+        top: 0;
+        z-index: 5;
+        backdrop-filter: blur(8px);
+        background: rgba(7, 9, 15, 0.75);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        padding: 0.9rem 1rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 0.75rem;
+      }
+
+      .chip-row {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+      }
+
+      .chip {
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        color: var(--muted);
+        border-radius: 999px;
+        padding: 0.4rem 0.7rem;
+        font-size: 0.8rem;
+        letter-spacing: 0.03em;
+      }
+
+      .layout {
+        display: grid;
+        grid-template-columns: minmax(340px, 460px) 1fr;
+        gap: 1rem;
+        padding: 1rem;
+      }
+
+      .stack,
+      .panel {
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.04), transparent),
+          var(--panel);
+        border-radius: 18px;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        padding: 1rem;
+      }
+
+      .screen {
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 14px;
+        padding: 1rem;
+        margin-bottom: 0.9rem;
+        background: var(--panel-alt);
+      }
+
+      .screen h2,
+      .panel h2,
+      .panel h3 {
+        margin: 0 0 0.6rem;
+        font-size: 0.97rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--muted);
+      }
+
+      .entry {
+        text-align: center;
+        min-height: 240px;
+        display: grid;
+        place-content: center;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .entry-wheel {
+        position: absolute;
+        width: 270px;
+        height: 270px;
+        border-radius: 50%;
+        background: conic-gradient(#ff5e72, #f7d37a, #8affaf, #72e5ff, #c481ff, #ff5e72);
+        filter: blur(16px);
+        opacity: 0.45;
+        animation: spin 26s linear infinite;
+      }
+
+      .entry-copy {
+        position: relative;
+        z-index: 1;
+        max-width: 270px;
+      }
+
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      button,
+      .button {
+        border: 0;
+        cursor: pointer;
+        border-radius: 10px;
+        padding: 0.7rem 0.85rem;
+        color: #081225;
+        background: linear-gradient(135deg, var(--accent), #8dffe7);
+        font-weight: 600;
+        letter-spacing: 0.02em;
+      }
+
+      textarea,
+      select,
+      input[type='range'] {
+        width: 100%;
+        margin-top: 0.35rem;
+        margin-bottom: 0.65rem;
+      }
+
+      textarea,
+      select {
+        background: #080d17;
+        color: var(--text);
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        border-radius: 10px;
+        padding: 0.6rem;
+      }
+
+      label {
+        font-size: 0.83rem;
+        color: var(--muted);
+        display: block;
+      }
+
+      .processing {
+        position: relative;
+        text-align: center;
+      }
+
+      .orbit {
+        width: 145px;
+        height: 145px;
+        margin: 0.35rem auto;
+        border-radius: 50%;
+        border: 2px dashed rgba(255, 255, 255, 0.35);
+        animation: spin 1.8s linear infinite;
+      }
+
+      .keywords {
+        display: flex;
+        justify-content: center;
+        gap: 0.4rem;
+        flex-wrap: wrap;
+      }
+
+      .keywords span {
+        font-size: 0.76rem;
+        padding: 0.2rem 0.5rem;
+        border-radius: 999px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+      }
+
+      .result p {
+        margin-top: 0;
+        color: #d8ddf7;
+      }
+
+      .subgrid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+        gap: 0.6rem;
+      }
+
+      .kpi {
+        padding: 0.65rem;
+        border-radius: 10px;
+        background: rgba(255, 255, 255, 0.04);
+      }
+
+      .mini-wheel {
+        height: 132px;
+        border-radius: 14px;
+        background: conic-gradient(#f7d37a, #8db2ff, #86ffe2, #ff7f9f, #f7d37a);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .pulse,
+      .opp {
+        position: absolute;
+        border-radius: 50%;
+      }
+
+      .pulse {
+        width: 15px;
+        height: 15px;
+        left: 28%;
+        top: 60%;
+        background: var(--white);
+        box-shadow: 0 0 0 10px rgba(255, 255, 255, 0.2);
+        animation: pulse 1.8s ease-out infinite;
+      }
+
+      .opp {
+        width: 12px;
+        height: 12px;
+        right: 19%;
+        top: 24%;
+        background: var(--red);
+      }
+
+      @keyframes pulse {
+        0% {
+          box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.45);
+        }
+        100% {
+          box-shadow: 0 0 0 20px rgba(255, 255, 255, 0);
+        }
+      }
+
+      .actions {
+        display: flex;
+        gap: 0.45rem;
+        flex-wrap: wrap;
+      }
+
+      .actions .ghost {
+        background: transparent;
+        color: var(--text);
+        border: 1px solid rgba(255, 255, 255, 0.22);
+      }
+
+      .live {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.7rem;
+      }
+
+      .dot {
+        width: 15px;
+        height: 15px;
+        border-radius: 50%;
+        background: var(--green);
+        box-shadow: 0 0 12px var(--green);
+        animation: pulse 1.4s ease infinite;
+      }
+
+      .control-grid {
+        display: grid;
+        grid-template-columns: 1.15fr 0.85fr;
+        gap: 0.9rem;
+      }
+
+      .wheel-large {
+        height: 350px;
+        border-radius: 18px;
+        background: radial-gradient(circle at center, transparent 20%, rgba(255,255,255,0.1) 20%, rgba(255,255,255,0.1) 22%, transparent 22%),
+          conic-gradient(from 80deg, #0f3460, #2e6fa8, #17baa4, #623d9c, #a02f56, #0f3460);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .wheel-large::after {
+        content: '';
+        position: absolute;
+        inset: 5%;
+        border-radius: 50%;
+        border: 1px solid rgba(255,255,255,0.35);
+      }
+
+      .status-panels {
+        display: grid;
+        gap: 0.7rem;
+      }
+
+      .bar {
+        height: 10px;
+        border-radius: 999px;
+        background: rgba(255,255,255,0.12);
+        overflow: hidden;
+      }
+
+      .bar > i {
+        display: block;
+        height: 100%;
+        background: linear-gradient(90deg, var(--gold), var(--accent));
+      }
+
+      .buttons-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.45rem;
+      }
+
+      .force { color: #0a0813; font-weight: 700; }
+      .force.order { background: linear-gradient(120deg, #8db2ff, #f7d37a); }
+      .force.purity { background: linear-gradient(120deg, #ffffff, #d7defd); }
+      .force.chaos { background: linear-gradient(120deg, #ff5e72, #ffaf7a); }
+      .force.collapse { background: linear-gradient(120deg, #d26fff, #7b75ff); }
+
+      .toggles {
+        display: grid;
+        gap: 0.4rem;
+      }
+
+      .toggle {
+        border: 1px solid rgba(255,255,255,0.17);
+        padding: 0.5rem;
+        border-radius: 10px;
+        display: flex;
+        justify-content: space-between;
+      }
+
+      .overlay-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.4rem;
+      }
+
+      .overlay-tags span {
+        font-size: 0.75rem;
+        padding: 0.25rem 0.45rem;
+        border-radius: 8px;
+        background: rgba(255,255,255,0.08);
+      }
+
+      .forest {
+        border: 1px dashed rgba(138, 255, 175, 0.5);
+        color: var(--green);
+        background: rgba(18, 46, 25, 0.35);
+      }
+
+      @media (max-width: 1120px) {
+        .layout,
+        .control-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="top-bar">
+      <strong>Ritual Instrument + Control Deck</strong>
+      <div class="chip-row">
+        <span class="chip">📱 Participant UI</span>
+        <span class="chip">🖥️ Operator Panel</span>
+      </div>
+    </div>
+
+    <main class="layout">
+      <section class="stack" aria-label="Phone UI">
+        <h2>Phone Interface (Participant Side)</h2>
+
+        <article class="screen entry">
+          <div class="entry-wheel"></div>
+          <div class="entry-copy">
+            <p>Where are you in the system?</p>
+            <button>ENTER THE WHEEL</button>
+          </div>
+        </article>
+
+        <article class="screen">
+          <h2>Triad Entry</h2>
+          <label for="situation">Describe your current situation, conflict, or thought.</label>
+          <textarea id="situation" rows="4">I keep performing control while my body asks for rest.</textarea>
+
+          <label for="concept">Concept</label>
+          <select id="concept">
+            <option>power</option><option>love</option><option>survival</option><option selected>truth</option><option>control</option>
+          </select>
+
+          <label for="persona">Persona</label>
+          <select id="persona">
+            <option>leader</option><option>servant</option><option selected>rebel</option><option>lover</option><option>analyst</option><option>outsider</option>
+          </select>
+
+          <label for="embodiment">Embodiment: tense → activated</label>
+          <input id="embodiment" type="range" min="0" max="100" value="66" />
+
+          <button>MAP ME</button>
+        </article>
+
+        <article class="screen processing">
+          <h2>Processing</h2>
+          <div class="orbit"></div>
+          <div class="keywords"><span>hierarchy</span><span>exhaustion</span><span>desire</span><span>control</span></div>
+          <p>Locating your position in the structure…</p>
+        </article>
+
+        <article class="screen result">
+          <h2>Result</h2>
+          <p>
+            You are operating within a belief that hierarchy feels natural, positioning
+            yourself as a high-performing agent of order, yet your body signals exhaustion
+            and suppressed desire.
+          </p>
+
+          <div class="subgrid">
+            <div class="kpi"><strong>Archetype:</strong> PARZIVAL</div>
+            <div class="kpi"><strong>Quadrant:</strong> Bottom Left (Embodiment / Real)</div>
+            <div class="kpi"><strong>Phase:</strong> Wounded Learning Loop</div>
+          </div>
+
+          <div class="mini-wheel" aria-label="Wheel snapshot">
+            <span class="pulse"></span>
+            <span class="opp"></span>
+          </div>
+
+          <p><strong>Embodiment prompt:</strong> Notice where you hesitate to ask the question. Stay with discomfort before resolution.</p>
+          <div class="actions">
+            <button class="ghost">SEE MY OPPOSITE</button>
+            <button class="ghost">ROTATE ME</button>
+            <button>ENTER FOREST MODE</button>
+          </div>
+        </article>
+
+        <article class="screen live">
+          <div>
+            <h2>Live Mode</h2>
+            <div>Influence: <strong>0.68</strong></div>
+            <div>Current archetype: <strong>PARZIVAL</strong></div>
+          </div>
+          <div class="dot" title="system shift pulse"></div>
+        </article>
+      </section>
+
+      <section class="panel" aria-label="Projection Control Panel">
+        <h2>Projection Control Panel (Operator / Stage Manager)</h2>
+
+        <div class="control-grid">
+          <div>
+            <h3>Master Dashboard</h3>
+            <div class="wheel-large"></div>
+            <div class="status-panels">
+              <div class="kpi">
+                <div>Engagement level</div>
+                <div class="bar"><i style="width:72%"></i></div>
+              </div>
+              <div class="kpi">
+                <div>Input density</div>
+                <div class="bar"><i style="width:63%"></i></div>
+              </div>
+              <div class="kpi">
+                <div>Dominant embodiment: <strong>fatigue / desire</strong></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="status-panels">
+            <div class="kpi">
+              <h3>Archetype Distribution</h3>
+              <div>Arthur 22%</div><div class="bar"><i style="width:22%"></i></div>
+              <div>Tristan 31%</div><div class="bar"><i style="width:31%"></i></div>
+              <div>Parzival 18%</div><div class="bar"><i style="width:18%"></i></div>
+            </div>
+
+            <div class="kpi">
+              <h3>Quadrant Control</h3>
+              <div class="buttons-grid">
+                <button class="force order">FORCE ORDER</button>
+                <button class="force purity">FORCE PURITY</button>
+                <button class="force chaos">RELEASE CHAOS</button>
+                <button class="force collapse">TRIGGER COLLAPSE</button>
+              </div>
+            </div>
+
+            <div class="kpi">
+              <h3>Feedback Loop Engine</h3>
+              <div class="toggles">
+                <div class="toggle"><span>Passive → Arthur mode</span><strong>✅</strong></div>
+                <div class="toggle"><span>Chaos → Tristan mode</span><strong>✅</strong></div>
+                <div class="toggle"><span>Questions → Parzival mode</span><strong>✅</strong></div>
+              </div>
+              <label>Sensitivity (reaction speed)</label>
+              <input type="range" min="0" max="100" value="74" />
+            </div>
+
+            <div class="kpi">
+              <h3>Economic Overlay</h3>
+              <div class="overlay-tags">
+                <span>Attention Flow</span>
+                <span>Influence Nodes</span>
+                <span>Feudal Map</span>
+                <span>Platform Map</span>
+              </div>
+            </div>
+
+            <div class="kpi">
+              <h3>Archetype Triggers</h3>
+              <div class="buttons-grid">
+                <button class="ghost">SUMMON MORGAN</button>
+                <button class="ghost">SUMMON GREEN KNIGHT</button>
+                <button class="ghost">SUMMON GALAHAD</button>
+                <button class="ghost">SUMMON TRISTAN</button>
+              </div>
+            </div>
+
+            <div class="kpi forest">
+              <h3>Forest Mode (Anarchy Switch)</h3>
+              <p>Wheel breaks apart. Nodes float freely. No center. Ambient drift + random participant links.</p>
+              <button>ACTIVATE FOREST MODE 🌲</button>
+            </div>
+
+            <div class="kpi">
+              <h3>Jung / Campbell Reveal</h3>
+              <div class="overlay-tags">
+                <span>Hero Cycle</span><span>Wounded King</span><span>Temptation Phase</span><span>Collapse Before Renewal</span>
+              </div>
+              <p>“You are repeating a known pattern.”</p>
+            </div>
+
+            <div class="kpi">
+              <h3>Output Log / Recording</h3>
+              <p>Save session states and export archetypes, transitions, and generated texts.</p>
+              <div class="actions">
+                <button class="ghost">SAVE SNAPSHOT</button>
+                <button class="ghost">EXPORT CSV</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </body>
 </html>
